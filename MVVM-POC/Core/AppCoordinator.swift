@@ -8,7 +8,7 @@
 
 import UIKit
 
-class AppCoordinator: NSObject,Coordinator {
+class AppCoordinator: NSObject, Coordinator {
     private var coordinators = Stack<Coordinator>()
     
     var rootViewController: UINavigationController
@@ -29,21 +29,14 @@ class AppCoordinator: NSObject,Coordinator {
     }
     
     func startEpisodesCoordinator() {
-        let coordinator = EpisodeCoordinator(rootViewController: self.rootViewController, delegate: self)
-        coordinator.startFlow()
-        self.coordinators.push(coordinator)
+        // TODO: Implementar
     }
-    
-    func startLocationsCoordinator() {
-        let coordinator = LocationCoordinator(rootViewController: self.rootViewController)
-        coordinator.startFlow()
-        self.coordinators.push(coordinator)
-    }
+
 }
 
 extension AppCoordinator: InitialCoordinatorDelegate {}
 extension AppCoordinator: ListCoordinatorDelegate {
     func finishCoordinator() {
-        self.coordinators.pop()
+        _ = self.coordinators.pop()
     }
 }

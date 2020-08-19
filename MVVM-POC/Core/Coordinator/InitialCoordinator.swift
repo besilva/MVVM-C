@@ -11,7 +11,6 @@ import UIKit
 protocol InitialCoordinatorDelegate: class {
     func startEpisodesCoordinator()
     func startCharactersCoordinator()
-    func startLocationsCoordinator()
 }
 
 class InitialCoordinator: Coordinator {
@@ -40,10 +39,6 @@ class InitialCoordinator: Coordinator {
         delegate?.startCharactersCoordinator()
     }
     
-    func startLocationsCoordinator() {
-        delegate?.startLocationsCoordinator()
-    }
-    
 }
 
 extension InitialCoordinator: InitialViewModelDelegate {
@@ -54,8 +49,5 @@ extension InitialCoordinator: InitialViewModelDelegate {
     func goToEpisodes() {
         startEpisodesCoordinator()
     }
-    
-    func goToLocations() {
-        startLocationsCoordinator()
-    }
+
 }

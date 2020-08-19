@@ -11,7 +11,6 @@ import Foundation
 protocol InitialViewModelDelegate: class {
     func goToCharacters()
     func goToEpisodes()
-    func goToLocations()
 }
 
 class InitialViewModel {
@@ -28,8 +27,5 @@ class InitialViewModel {
     func goToCharacters() {
         delegate?.goToCharacters()
     }
-    
-    func goToLocations() {
-        delegate?.goToLocations()
-    }
+
 }

@@ -23,11 +23,7 @@ class CharacterCoordinator: Coordinator {
     }
     
     func startFlow() {
-        let listController = ListViewController.instantiate()
-        let viewModel = CharacterListViewModel()
-        viewModel.coordinatorDelegate = self
-        viewModel.delegate = listController
-        listController.viewModel = viewModel
+        let listController = CharacterListViewController(delegate: self)
         self.rootViewController.pushViewController(listController, animated: true)
     }
     
@@ -37,7 +33,7 @@ class CharacterCoordinator: Coordinator {
     
 }
 
-extension CharacterCoordinator: ListViewModelDelegate {
+extension CharacterCoordinator: CharacterListCoordinatorDelegate {
     func finishCoordinator() {
         delegate?.finishCoordinator()
     }

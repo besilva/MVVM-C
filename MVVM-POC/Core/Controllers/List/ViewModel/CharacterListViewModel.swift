@@ -10,38 +10,38 @@ import Foundation
 
 protocol  CharacterListViewModelDelegate: class{
     func stopLoading()
+   
 }
 
-class CharacterListViewModel: ListViewModel {
+protocol CharacterListCoordinatorDelegate: class {
+    func finishCoordinator()
+    func goToDetail(character: Character)
+}
+
+struct CellViewModel {
+    var title: String
+    var subtitle: String
+}
+
+class CharacterListViewModel {
+    
     weak var delegate: CharacterListViewModelDelegate?
-    weak var coordinatorDelegate: ListViewModelDelegate?
     var isLoading: Bool = false
     var count: Int { return list.count }
     var list: [Character] = []
+    
+    init(characters: [Character], delegate: CharacterListViewModelDelegate) {
+        self.list = characters
+        self.delegate = delegate
+        self.delegate?.stopLoading()
+    }
     
     func getObject(indexPath: IndexPath) -> CellViewModel {
         let character = list[indexPath.row]
         return CellViewModel(title: character.name, subtitle: "\(character.gender)")
     }
     
-    func fetchObjects(completion: @escaping () -> Void) {
-        let cs = RickAndMortyService()
-        isLoading = true
-        cs.getAllCharacters { (result) in
-            Thread.sleep(forTimeInterval: 2)
-            switch result {
-            case .success(let response):
-                self.list = response.results
-            case .failure(let error):
-                self.list = []
-            }
-            self.isLoading = false
-            self.delegate?.stopLoading()
-            completion()
-        }
-    }
-    
-    func goToDetail(id: Int) {
-        coordinatorDelegate?.goToDetail(character: list[id])
+    func getCharacter(id: Int) -> Character {
+        return list[id]
     }
 }

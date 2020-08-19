@@ -18,7 +18,15 @@ class InitialViewController: UIViewController, Storyboarded {
 
         // Do any additional setup after loading the view.
     }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+    }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+    }
+    
     @IBAction func charactersButtonTapped(_ sender: Any) {
         viewModel?.goToCharacters()
     }
@@ -26,7 +34,5 @@ class InitialViewController: UIViewController, Storyboarded {
     @IBAction func episodesButtonTapped(_ sender: Any) {
         viewModel?.goToEpisodes()
     }
-    @IBAction func locationsButtonPressed(_ sender: Any) {
-        viewModel?.goToLocations()
-    }
+
 }

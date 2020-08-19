@@ -9,6 +9,7 @@
 import Foundation
 
 class RickAndMortyService: BaseService {
+
     func getAllCharacters(router: CharacterRouter = CharacterRouter.getAllCharacters, completion: @escaping (Result<CharacterResponse, Error>) -> ()) {
         return self.request(router: router, completion: completion)
     }
@@ -23,8 +24,5 @@ class RickAndMortyService: BaseService {
                         completion: @escaping (Result<EpisodeResponse, Error>) -> ()) {
         return self.request(router: router, completion: completion)
     }
-    
-    func getAllLocations(router: CharacterRouter = CharacterRouter.getAllLocations, completion:  @escaping (Result<LocationResponse, Error>) -> ()) {
-        return self.request(router: router, completion: completion)
-    }
+
 }

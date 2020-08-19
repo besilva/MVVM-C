@@ -10,7 +10,7 @@ import Foundation
 
 // MARK: - CharacterResponse
 class CharacterResponse: Codable {
-    let info: Info
+    let info: Info?
     let results: [Character]
 
     init(info: Info, results: [Character]) {

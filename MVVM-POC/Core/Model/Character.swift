@@ -10,9 +10,9 @@ import Foundation
 
 // MARK: - Info
 class Info: Codable {
-    let count, pages: Int
-    let next: String
-    let prev: String
+    let count, pages: Int?
+    let next: String?
+    let prev: String?
 
     init(count: Int, pages: Int, next: String, prev: String) {
         self.count = count

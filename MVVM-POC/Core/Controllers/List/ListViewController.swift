@@ -8,87 +8,61 @@
 
 import UIKit
 
-class ListViewController: UIViewController, Storyboarded{
-    private var loader: UIActivityIndicatorView!
-    @IBOutlet private weak var tableView: UITableView!
+class CharacterListViewController: UIViewController {
+
+    let delegateCoordinator: CharacterListCoordinatorDelegate?
+    var theView: ListView {
+        return view as! ListView
+    }
     
-    var viewModel: ListViewModel?
+    init(delegate: CharacterListCoordinatorDelegate) {
+        delegateCoordinator = delegate
+        super.init(nibName: nil, bundle: nil)
+        fetchObjects()
+    }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        createLoader()
-//        setupBindable()
-        setupTableView()
-        viewModel?.fetchObjects() {
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
-                self.tableView.isHidden = false
-            }
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func loadView() {
+        let view = ListView { (char) in
+            self.delegateCoordinator?.goToDetail(character: char)
+            return
         }
+        self.view = view
+        
     }
-    
-    func setupTableView() {
-        tableView.delegate = self
-        tableView.dataSource = self
-    }
-    
-//    func setupBindable() {
-//        guard let viewModel = viewModel else { return }
-//        viewModel.isLoading.bind { [weak self](isLoading) in
-//            DispatchQueue.main.async {
-//                if isLoading {
-//                    self?.loader.startAnimating()
-//                } else {
-//                    self?.loader.stopAnimating()
-//                }
-//            }
-//        }
-//    }
     
     override func willMove(toParent parent: UIViewController?) {
         super.willMove(toParent: parent)
         guard parent != nil else {
-            viewModel?.back()
+//            viewModel?.back()
             return
         }
     }
     
-    func createLoader() {
-        loader = UIActivityIndicatorView(style: .gray)
-        loader.center = self.view.center
-        loader.startAnimating()
-        loader.hidesWhenStopped = true
-        
-        self.view.addSubview(loader)
-    }
-}
-
-extension ListViewController: UITableViewDelegate, UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        guard let viewModel = viewModel else { return 0 }
-        return viewModel.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let viewModel = viewModel else { return UITableViewCell() }
-        let cell = UITableViewCell.init(style: .subtitle, reuseIdentifier: "test")
-        let object = viewModel.getObject(indexPath: indexPath)
-        cell.textLabel?.text = object.title
-        cell.detailTextLabel?.text = object.subtitle
-        return cell
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        viewModel?.goToDetail(id: indexPath.row)
-    }
-}
-
-extension ListViewController: CharacterListViewModelDelegate {
-    func stopLoading() {
-        DispatchQueue.main.async {
-            self.loader.stopAnimating()
+    func fetchObjects() {
+        let cs = RickAndMortyService()
+        cs.getAllCharacters { (result) in
+            Thread.sleep(forTimeInterval: 2)
+            switch result {
+            case .success(let response):
+                self.updateView(characters: response.results)
+            case .failure(let error):
+               print(error)
+            }
+            
         }
     }
     
+    func updateView(characters: [Character]) {
+        DispatchQueue.main.async {
+            let viewModel = CharacterListViewModel(characters: characters, delegate: self.theView)
+            self.theView.viewModel = viewModel
+        }
+    }
     
 }
+
+
